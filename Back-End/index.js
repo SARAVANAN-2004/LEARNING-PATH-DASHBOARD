@@ -28,6 +28,7 @@ app.use(
 );
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Serve static files correctly
 app.use(express.static(path.join(__dirname, "../Front-End")));
@@ -69,6 +70,71 @@ app.get("/auth/google/failure", (req, res) => {
 });
 
 
+app.post("/signUp", async (req, res) => {
+  console.log("Received sign-up request:", req.body); // Debugging log
+  const { username, email, password } = req.body;
+
+  try {
+    console.log("Checking if user exists..."); // Debugging log
+    const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [email]);
+
+    if (checkResult.rows.length > 0) {
+      console.log("User already exists:", email); // Debugging log
+      return res.status(400).json({ error: "User already exists" });
+    }
+
+    console.log("Inserting new user into the database..."); // Debugging log
+    const result = await db.query(
+      "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *",
+      [email, password]
+    );
+
+    const user = result.rows[0];
+    console.log("User inserted successfully:", user); // Debugging log
+
+    req.login(user, (err) => {
+      if (err) {
+        console.error("Login error:", err);
+        return res.status(500).json({ error: "Login failed after sign-up" });
+      }
+      console.log("User logged in successfully");
+      return res.status(200).json({ message: "User registered and logged in successfully", user });
+    });
+  } catch (err) {
+    console.error("Sign-up error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/SingIn", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    console.log("Received sign-in request:", req.body); // Debugging log
+
+    // Check if the user exists
+    const userResult = await db.query("SELECT * FROM users WHERE email = $1", [email]);
+
+    if (userResult.rows.length === 0) {
+      // User does not exist
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    const user = userResult.rows[0];
+
+    // Compare the password (plain-text comparison since we're not hashing)
+    if (user.password !== password) {
+      return res.status(400).json({ error: "Invalid password" });
+    }
+
+    // If everything is correct, send a success response
+    console.log("User logged in successfully:", user); // Debugging log
+    res.status(200).json({ message: "Login successful", user });
+  } catch (err) {
+    console.error("Sign-in error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 passport.use(
   "local",

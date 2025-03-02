@@ -284,27 +284,27 @@ button.unit .icon {
     <div class="container right-panel-active">
      
       <div class="container__form container--signup">
-        <form action="#" class="form" id="form1">
+        <form action="#" class="form" id="signupForm">
           <h2 class="form__title">SIGN UP</h2>
-          <input type="text" placeholder="User" class="input" />
-          <input type="email" placeholder="Email" class="input" />
-          <input type="password" placeholder="Password" class="input" />
+          <input type="text" id="username" placeholder="User" class="input" />
+          <input type="email" id="email" placeholder="Email" class="input" />
+          <input type="password" id="password" placeholder="Password" class="input" />
           <div class="segment">
             <a class="btn btn-block" href="/auth/google" role="button">
               <i class="fab fa-google"></i>
               Sign Up with Google
             </a>
           </div>
-          <button class="btn">Sign Up</button>
+          <button type="submit" class="btn">Sign Up</button>
         </form>
       </div>
 
       
       <div class="container__form container--signin">
-        <form action="#" class="form" id="form2">
+        <form action="/SingIn" class="form" id="signinForm">
           <h2 class="form__title">LOGIN</h2>
-          <input type="email" placeholder="Email" class="input" />
-          <input type="password" placeholder="Password" class="input" />
+          <input type="email" id="loginEmail" placeholder="Email" class="input" />
+          <input type="password" id="loginPassword" placeholder="Password" class="input" />
           <a href="#" class="link">Forgot your password?</a>
           <div class="segment">
             <a class="btn btn-block" href="/auth/google" role="button">
@@ -312,7 +312,7 @@ button.unit .icon {
               Sign In with Google
             </a>
           </div>
-          <button class="btn">Login</button>
+          <button type="submit" class="btn">Login</button>
         </form>
       </div>
 
