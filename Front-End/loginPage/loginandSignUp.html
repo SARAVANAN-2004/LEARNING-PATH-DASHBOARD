@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Slide Sign In / Sign Up Form</title>
-    <link rel="stylesheet" href="styles.css" />
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         :root {
@@ -265,6 +265,18 @@ button.unit .icon {
   }
 }
 
+.btn.btn-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Adds space between the icon and text */
+  width: 100%;
+  padding: 0.9rem;
+  white-space: nowrap; /* Prevents text from wrapping */
+  text-align: center;
+}
+
+
     </style>
   </head>
   <body>
@@ -278,9 +290,10 @@ button.unit .icon {
           <input type="email" placeholder="Email" class="input" />
           <input type="password" placeholder="Password" class="input" />
           <div class="segment">
-            <button class="unit" type="button"><i class="fa-brands fa-google"></i></button>
-            <button class="unit" type="button"><i class="fa-brands fa-facebook"></i></button>
-            <button class="unit" type="button"><i class="fa-brands fa-twitter"></i></button>
+            <a class="btn btn-block" href="/auth/google" role="button">
+              <i class="fab fa-google"></i>
+              Sign Up with Google
+            </a>
           </div>
           <button class="btn">Sign Up</button>
         </form>
@@ -294,9 +307,10 @@ button.unit .icon {
           <input type="password" placeholder="Password" class="input" />
           <a href="#" class="link">Forgot your password?</a>
           <div class="segment">
-            <button class="unit" type="button"><i class="fa-brands fa-google"></i></button>
-            <button class="unit" type="button"><i class="fa-brands fa-facebook"></i></button>
-            <button class="unit" type="button"><i class="fa-brands fa-twitter"></i></button>
+            <a class="btn btn-block" href="/auth/google" role="button">
+              <i class="fab fa-google"></i>
+              Sign In with Google
+            </a>
           </div>
           <button class="btn">Login</button>
         </form>
