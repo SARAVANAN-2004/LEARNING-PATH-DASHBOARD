@@ -9,6 +9,8 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import env from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import { send } from "process";
+import nodemailer from 'nodemailer';  
 
 // Fix __dirname in ES module
 const __filename = fileURLToPath(import.meta.url);
@@ -48,6 +50,63 @@ db.connect();
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../Front-End/index.html"));
 });
+
+//contact and Query messsage starts
+
+app.post("/contactForQuery", async (req, res) => {
+  const { name, email, subject, message } = req.body;
+
+  if (!name || !email || !subject || !message) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  console.log("📩 New Contact Form Submission:");
+  console.log("Name:", name);
+  console.log("Email:", email);
+  console.log("Subject:", subject);
+  console.log("Message:", message);
+
+  try {
+    const mailSent = await sendEmail(req.body);
+    if (mailSent) {
+      res.status(200).json({ success: true, message: "Message received & email sent!" });
+    } else {
+      res.status(500).json({ error: "Failed to send email" });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// ✅ Function to send email
+async function sendEmail({ name, email, subject, message }) {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+
+      user: process.env.GMAIL_USER, // Store in .env
+      pass: process.env.GMAIL_PASS, // Store in .env
+    },
+  });
+
+  const mailOptions = {
+    from: email, // User's email
+    to: process.env.GMAIL_USER, // Your email
+    subject: `Contact Form: ${subject}`,
+    text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("📧 Mail sent successfully!");
+    return true;
+  } catch (error) {
+    console.error("❌ Error sending email:", error);
+    return false;
+  }
+}
+// Authentication starts
 
 app.get(
   "/auth/google",
@@ -214,6 +273,9 @@ passport.serializeUser((user, cb) => {
 passport.deserializeUser((user, cb) => {
   cb(null, user);
 });
+
+// Authentication ends
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
