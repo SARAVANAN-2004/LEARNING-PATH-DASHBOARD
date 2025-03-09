@@ -51,6 +51,11 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../Front-End/index.html"));
 });
 
+
+app.get("/dashboard",(req,res)=>{
+  res.sendFile(path.join(__dirname, "../Front-End/After_Login/index.html"));
+})
+
 //contact and Query messsage starts
 
 app.post("/contactForQuery", async (req, res) => {
@@ -119,12 +124,14 @@ app.get(
   "/auth/google/secrets",
   passport.authenticate("google", { failureRedirect: "/auth/google/failure" }),
   (req, res) => {
-    res.send("Logged in successfully!");
+    res.sendFile(path.join(__dirname, "../Front-End/After_Login/index.html"));
+
   }
 );
 
 // Handle login failure
 app.get("/auth/google/failure", (req, res) => {
+  alert("login failed");
   res.sendFile(path.join(__dirname, "../Front-End/index.html"));
 });
 
