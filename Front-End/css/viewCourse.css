@@ -1,107 +1,201 @@
+/* General Styles */
 body {
+    font-family: Arial, sans-serif;
     background-color: #f8f9fa;
-}
-.course-container {
-    max-width: 900px;
-    margin: 20px auto;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-.lesson-item:hover {
-    cursor: pointer;
-    background-color: #f1f1f1;
-}
-.ud-header {
-    background-color: #fff;
-    padding: 15px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.ud-header h1 {
-    font-size: 1.5rem;
     margin: 0;
+    padding: 0;
 }
-/* Header */
+
+/* Header Styling */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #1e3a8a;
-    color: white;
+    background-color: #fff;
     padding: 15px 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Logo */
 .logo {
-    font-size: 26px;
+    font-size: 1.8rem;
     font-weight: bold;
-    cursor: pointer;
-    letter-spacing: 1px;
+    color: #333;
 }
 
-/* Navigation Links */
-nav .nav-links {
-    display: flex;
+.nav-links {
     list-style: none;
-    gap: 25px;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
 }
 
 .nav-links li {
-    position: relative;
+    display: inline;
 }
 
 .nav-links a {
     text-decoration: none;
-    color: white;
-    font-size: 16px;
-    font-weight: 500;
-    transition: color 0.3s ease;
-    padding: 8px 12px;
-    border-radius: 5px;
+    color: #333;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
 }
 
 .nav-links a:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #ffcc00;
+    color: #007bff;
 }
 
 /* Search Bar */
 .search-bar {
+    padding: 8px;
     width: 250px;
-    padding: 8px 12px;
-    border-radius: 20px;
-    border: none;
-    outline: none;
-    font-size: 16px;
-    transition: 0.3s ease;
-}
-
-.search-bar:focus {
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 /* Icons */
 .icons {
     display: flex;
-    align-items: center;
     gap: 15px;
-    font-size: 20px;
 }
 
 .icon {
+    font-size: 1.5rem;
     cursor: pointer;
-    transition: transform 0.3s ease, color 0.3s ease;
+    transition: color 0.3s ease-in-out;
 }
 
 .icon:hover {
-    transform: scale(1.1);
-    color: #ffcc00;
+    color: #007bff;
+}
+
+/* Main Content Layout */
+.container-fluid {
+    padding: 20px;
+}
+
+/* Video Section */
+.video-container {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Sidebar - Course Sections */
+.accordion {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.accordion-header {
+    font-weight: bold;
+}
+
+.accordion-button {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.accordion-button:hover {
+    background-color: #0056b3;
+}
+
+.accordion-body {
+    background-color: #f1f1f1;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.list-group-item {
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.list-group-item:hover {
+    background-color: #ddd;
+}
+
+/* Tabs Below Video */
+.tabs-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.nav-tabs .nav-link {
+    color: #333;
+    font-weight: bold;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+}
+
+/* Tab Content */
+.tab-content {
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+/* Textarea Styling */
+textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+}
+
+/* Submit Buttons */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .search-bar {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .container-fluid {
+        padding: 10px;
+    }
+
+    .col-md-8, .col-md-4 {
+        width: 100%;
+    }
+
+    .accordion-button {
+        font-size: 0.9rem;
+    }
 }

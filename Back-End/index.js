@@ -54,8 +54,22 @@ app.get("/", (req, res) => {
 
 
 app.get("/dashboard",(req,res)=>{
-  res.sendFile(path.join(__dirname, "../Front-End/After_Login/home.html"));
+  res.sendFile(path.join(__dirname, "../Front-End/After_Login/Explore.html"));
 })
+
+app.get("/Explore.html",(req,res)=>{
+  res.sendFile(path.join(__dirname, "../Front-End/After_Login/Explore.html"));
+})
+
+app.get("/mylearningPage.html",(req,res)=>{
+  res.sendFile(path.join(__dirname, "../Front-End/After_Login/mylearningPage.html"));
+})
+
+
+app.get("/viewCourse.html",(req,res)=>{
+  res.sendFile(path.join(__dirname, "../Front-End/After_Login/viewCourse.html"));
+})
+
 
 //contact and Query messsage starts
 
@@ -125,7 +139,7 @@ app.get(
   "/auth/google/secrets",
   passport.authenticate("google", { failureRedirect: "/auth/google/failure" }),
   (req, res) => {
-    res.sendFile(path.join(__dirname, "../Front-End/After_Login/home.html"));
+    res.sendFile(path.join(__dirname, "../Front-End/After_Login/Explore.html"));
 
   }
 );
