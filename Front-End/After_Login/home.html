@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IQMath Dashboard</title>
+    <link rel="stylesheet" href="../css/Explore.css">
+</head>
+<body>
+    <header>
+        <div class="logo">IQMath</div>
+        
+        <nav>
+            <ul class="nav-links">
+                <li><a href="./home.html">Explore</a></li>
+                <li><a href="#">Teach on IQMath</a></li>
+                <li><a href="./mylearningPage.html">My Learning</a></li>
+            </ul>
+        </nav>
+
+        <input type="text" class="search-bar" placeholder="Search courses...">
+
+        <div class="icons">
+            <span class="icon">🛒</span>  <!-- Cart -->
+            <span class="icon">🔔</span>  <!-- Notification -->
+            <span class="icon">👤</span>  <!-- Profile -->
+        </div>
+    </header>
+
+    <main>
+        <h2>Recommended Courses</h2>
+        <div class="courses-container">
+            <!-- Course 1 -->
+            <div class="course-card">
+                <div class="image-container">
+                    <img src="https://img-c.udemycdn.com/course/240x135/2196488_8fc7_10.jpg" alt="Course Image">
+                </div>
+                <div class="course-info">
+                    <h3>Ultimate AWS Certified Solutions Architect Associate 2025</h3>
+                    <p class="instructor">Instructor: Stephane Maarek</p>
+                    <div class="rating">⭐ 4.7 (252,564 reviews)</div>
+                    <div class="price">
+                        <span class="discount-price">₹549</span>
+                        <span class="original-price">₹3,499</span>
+                    </div>
+                    <div class="badges">
+                        <span class="premium">Premium</span>
+                        <span class="bestseller">Bestseller</span>
+                    </div>
+                    <button onclick="goToCourse('AWS Certified Solutions Architect')">Go to Course</button>
+                </div>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="course-card">
+                <div class="image-container">
+                    <img src="https://img-c.udemycdn.com/course/240x135/1565838_e54e_16.jpg" alt="Course Image">
+                </div>
+                <div class="course-info">
+                    <h3>Python for Data Science and Machine Learning Bootcamp</h3>
+                    <p class="instructor">Instructor: Jose Portilla</p>
+                    <div class="rating">⭐ 4.6 (200,432 reviews)</div>
+                    <div class="price">
+                        <span class="discount-price">₹699</span>
+                        <span class="original-price">₹3,999</span>
+                    </div>
+                    <div class="badges">
+                        <span class="premium">Premium</span>
+                    </div>
+                    <button onclick="goToCourse('Python for Data Science')">Go to Course</button>
+                </div>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="course-card">
+                <div class="image-container">
+                    <img src="https://img-c.udemycdn.com/course/240x135/567828_67d0.jpg" alt="Course Image">
+                </div>
+                <div class="course-info">
+                    <h3>React - The Complete Guide (2025 Edition)</h3>
+                    <p class="instructor">Instructor: Maximilian Schwarzmüller</p>
+                    <div class="rating">⭐ 4.8 (182,342 reviews)</div>
+                    <div class="price">
+                        <span class="discount-price">₹799</span>
+                        <span class="original-price">₹4,499</span>
+                    </div>
+                    <div class="badges">
+                        <span class="bestseller">Bestseller</span>
+                    </div>
+                    <button onclick="goToCourse('React - The Complete Guide')">Go to Course</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function goToCourse(courseName) {
+            alert(`Navigating to ${courseName} course...`);
+        }
+    </script>
+</body>
+</html>
