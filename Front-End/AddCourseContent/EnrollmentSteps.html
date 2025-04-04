@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Creation - All Steps</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f7fc;
+        }
+        
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .step-indicator {
+            font-size: 16px;
+        }
+        
+        .exit-btn {
+            background-color: red;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .exit-btn:hover {
+            background-color: #d32f2f;
+        }
+        /* Progress Bar */
+        
+        .progress-bar {
+            height: 5px;
+            background-color: #ddd;
+            margin: 10px 0;
+            width: 100%;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: #4CAF50;
+        }
+        /* Step Content */
+        
+        .step-content {
+            display: none;
+        }
+        
+        .step-content.active {
+            display: block;
+        }
+        /* Buttons */
+        
+        .next-btn,
+        .previous-btn,
+        .finish-btn,
+        .continue-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .next-btn:hover,
+        .previous-btn:hover,
+        .finish-btn:hover,
+        .continue-btn:hover {
+            background-color: #45a049;
+        }
+        
+        .action-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        /* Input and Textarea */
+        
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        /* Character Count */
+        
+        .char-count {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+        /* Step 1 - Course Options */
+        
+        .options {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .option {
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .option img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        /* Step 3 - Category Dropdown */
+        
+        .category-dropdown {
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        /* Time Options */
+        
+        .time-options label {
+            display: block;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header with step indicator -->
+        <header class="header">
+            <div class="step-indicator">
+                <span class="step">Step 1 of 5</span>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 0%;"></div>
+                </div>
+            </div>
+            <button class="exit-btn" onclick="exitCourseCreation()">Exit</button>
+        </header>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <!-- Step 1: Select Course Type -->
+            <section class="step-content step-1 active">
+                <h1>First, let's find out what type of course you're making.</h1>
+                <div class="options">
+                    <div class="option" onclick="selectCourseType('Course')">
+                        <img src="https://via.placeholder.com/100" alt="Course">
+                        <h3>Course</h3>
+                        <p>Create rich learning experiences with the help of video lectures, quizzes, coding exercises, etc.</p>
+                    </div>
+                    <div class="option" onclick="selectCourseType('Practice Test')">
+                        <img src="https://via.placeholder.com/100" alt="Practice Test">
+                        <h3>Practice Test</h3>
+                        <p>Help students prepare for certification exams by providing practice questions.</p>
+                    </div>
+                </div>
+                <button class="next-btn" onclick="nextStep(2)">Next</button>
+            </section>
+
+            <!-- Step 2: Course Title -->
+            <section class="step-content step-2">
+                <h1>How about a working title?</h1>
+                <p>It's ok if you can't think of a good title now. You can change it later.</p>
+                <input type="text" id="course-title" placeholder="e.g. Learn Photoshop CS6 from Scratch" oninput="updateCharCount()">
+                <div class="char-count">60</div>
+                <div class="action-btns">
+                    <button class="previous-btn" onclick="previousStep(1)">Previous</button>
+                    <button class="next-btn" onclick="nextStep(3)">Next</button>
+                </div>
+            </section>
+
+            <!-- Step 3: Category Selection -->
+            <section class="step-content step-3">
+                <h1>What category best fits the knowledge you'll share?</h1>
+                <p>If you're not sure about the right category, you can change it later.</p>
+                <select class="category-dropdown" id="category-dropdown" onchange="updateCategorySelection()">
+          <option value="" disabled selected>Choose a category</option>
+          <option value="development">Development</option>
+          <option value="business">Business</option>
+          <option value="finance">Finance & Accounting</option>
+          <option value="it_software">IT & Software</option>
+          <option value="office_productivity">Office Productivity</option>
+          <option value="personal_development">Personal Development</option>
+          <option value="design">Design</option>
+          <option value="marketing">Marketing</option>
+          <option value="lifestyle">Lifestyle</option>
+          <option value="photography">Photography & Video</option>
+          <option value="health_fitness">Health & Fitness</option>
+          <option value="music">Music</option>
+          <option value="teaching_academics">Teaching & Academics</option>
+          <option value="dont_know">I don't know yet</option>
+        </select>
+                <button class="continue-btn" onclick="nextStep(4)">Continue</button>
+            </section>
+
+            <!-- Step 4: Plan Your Course (Course Description and Prerequisites) -->
+            <section class="step-content step-4">
+                <h1>Plan your course</h1>
+                <h3>Intended Learners</h3>
+                <div class="course-description">
+                    <label for="learn-objectives">What will students learn in your course?</label>
+                    <textarea id="learn-objectives" placeholder="Example: Define the roles and responsibilities of a project manager"></textarea>
+                    <div class="char-count">160</div>
+                </div>
+
+                <div class="course-description">
+                    <label for="requirements">What are the requirements or prerequisites for taking your course?</label>
+                    <textarea id="requirements" placeholder="Example: No programming experience needed. You will learn everything you need to know."></textarea>
+                    <div class="char-count">160</div>
+                </div>
+
+                <div class="course-description">
+                    <label for="who-is-this-for">Who is this course for?</label>
+                    <textarea id="who-is-this-for" placeholder="Example: Beginner Python developers curious about data science."></textarea>
+                    <div class="char-count">160</div>
+                </div>
+
+                <div class="action-btns">
+                    <button class="previous-btn" onclick="previousStep(3)">Previous</button>
+                    <button class="next-btn" onclick="nextStep(5)">Next</button>
+                </div>
+            </section>
+
+            <!-- Step 5: Time Commitment -->
+            <section class="step-content step-5">
+                <h1>How much time can you spend creating your course per week?</h1>
+                <p>There's no wrong answer. We can help you achieve your goals even if you don't have much time.</p>
+                <div class="time-options">
+                    <label><input type="radio" name="time" value="0-2"> I’m very busy right now (0-2 hours)</label>
+                    <label><input type="radio" name="time" value="2-4"> I’ll work on this on the side (2-4 hours)</label>
+                    <label><input type="radio" name="time" value="5+"> I have lots of flexibility (5+ hours)</label>
+                    <label><input type="radio" name="time" value="haven't_decided"> I haven’t yet decided if I have time</label>
+                </div>
+
+                <div class="action-btns">
+                    <button class="previous-btn" onclick="previousStep(4)">Previous</button>
+                    <a href="CreateCourse.html">
+                        <button class="finish-btn">Create Course</button>
+                      </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        let courseType = '';
+        let category = '';
+        let title = '';
+
+        function nextStep(step) {
+            document.querySelector('.step-' + (step - 1)).classList.remove('active');
+            document.querySelector('.step-' + step).classList.add('active');
+            updateProgress(step);
+        }
+
+        function previousStep(step) {
+            document.querySelector('.step-' + (step + 1)).classList.remove('active');
+            document.querySelector('.step-' + step).classList.add('active');
+            updateProgress(step);
+        }
+
+        function updateProgress(step) {
+            const progress = (step - 1) * 25;
+            document.querySelector('.progress').style.width = progress + '%';
+            document.querySelector('.step').textContent = 'Step ' + step + ' of 5';
+        }
+
+        function updateCharCount() {
+            const charCountElement = document.querySelector('.char-count');
+            const titleInput = document.getElementById('course-title');
+            const remainingChars = 60 - titleInput.value.length;
+            charCountElement.textContent = remainingChars;
+        }
+
+        function updateCategorySelection() {
+            category = document.getElementById('category-dropdown').value;
+        }
+
+        function selectCourseType(type) {
+            courseType = type;
+        }
+
+        function finishCourse() {
+            alert('Course created successfully!');
+        }
+
+        function exitCourseCreation() {
+            if (confirm('Are you sure you want to exit? Your progress may not be saved.')) {
+                window.location.reload(); // Reloads the page if user confirms exit
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Course with Sections and Lessons</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    button {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .create-btn {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .add-section-btn,
+    .add-lesson-btn,
+    .add-resource-btn {
+      margin-top: 10px;
+      background-color: #007BFF;
+      color: white;
+    }
+
+    .section {
+      margin-top: 20px;
+      padding: 15px;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      background-color: #fff;
+    }
+
+    .lesson {
+      margin-top: 15px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f1f1f1;
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 300px;
+      margin-top: 10px;
+    }
+
+    .summary {
+      margin-top: 30px;
+      padding: 20px;
+      background: #fff;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+    }
+
+    .submit-btn {
+      background-color: #28a745;
+      color: white;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Create Course</h1>
+    <button class="create-btn" onclick="addSection()">+ Add Section</button>
+    <div id="sections"></div>
+
+    <div class="summary">
+      <h3>Course Summary</h3>
+      <textarea id="courseSummary" rows="4" placeholder="Write a summary of the course..."></textarea>
+    </div>
+
+    <button class="submit-btn" onclick="submitCourse()">Submit Course</button>
+  </div>
+
+  <script>
+    let sectionCount = 0;
+
+    function addSection() {
+      sectionCount++;
+      const section = document.createElement("div");
+      section.className = "section";
+      section.id = `section-${sectionCount}`;
+      section.innerHTML = `
+        <h2>Section ${sectionCount}</h2>
+        <input type="text" placeholder="Section Title" class="section-title"><br>
+        <button class="add-lesson-btn" onclick="addLesson('${section.id}')">+ Add Lesson</button>
+        <div class="lessons"></div>
+      `;
+      document.getElementById("sections").appendChild(section);
+    }
+
+    function addLesson(sectionId) {
+      const lesson = document.createElement("div");
+      lesson.className = "lesson";
+      lesson.innerHTML = `
+        <input type="text" placeholder="Lesson Title" class="lesson-title">
+        <input type="text" placeholder="YouTube Video URL" oninput="embedVideo(this)">
+        <div class="video-preview"></div>
+        <textarea placeholder="Add Resources (optional)" class="lesson-resources" rows="2"></textarea>
+      `;
+      document.querySelector(`#${sectionId} .lessons`).appendChild(lesson);
+    }
+
+    function embedVideo(inputElement) {
+      const url = inputElement.value;
+      const videoPreview = inputElement.nextElementSibling;
+      let videoId = "";
+
+      try {
+        if (url.includes("youtube.com") || url.includes("youtu.be")) {
+          if (url.includes("youtu.be")) {
+            videoId = url.split("/").pop();
+          } else {
+            const urlParams = new URLSearchParams(new URL(url).search);
+            videoId = urlParams.get("v");
+          }
+          videoPreview.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+        } else {
+          videoPreview.innerHTML = `<p style="color:red;">Invalid YouTube URL</p>`;
+        }
+      } catch {
+        videoPreview.innerHTML = `<p style="color:red;">Invalid URL Format</p>`;
+      }
+    }
+
+    function submitCourse() {
+      const courseData = [];
+      const sections = document.querySelectorAll(".section");
+
+      sections.forEach(section => {
+        const sectionTitle = section.querySelector(".section-title").value;
+        const lessons = section.querySelectorAll(".lesson");
+        const lessonData = [];
+
+        lessons.forEach(lesson => {
+          const title = lesson.querySelector(".lesson-title").value;
+          const videoInput = lesson.querySelector("input[type='text']").value;
+          const resources = lesson.querySelector(".lesson-resources").value;
+          lessonData.push({ title, video: videoInput, resources });
+        });
+
+        courseData.push({
+          sectionTitle,
+          lessons: lessonData
+        });
+      });
+
+      const summary = document.getElementById("courseSummary").value;
+
+      const fullCourse = {
+        sections: courseData,
+        summary: summary
+      };
+
+      console.log("Submitted Course:", fullCourse);
+      alert("Course submitted! Check console for data.");
+    }
+  </script>
+</body>
+</html>

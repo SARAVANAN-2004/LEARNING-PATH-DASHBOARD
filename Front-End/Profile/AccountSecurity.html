@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Security</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+      }
+      .security-container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 400px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: 0.3s;
+      }
+      button:hover {
+        background-color: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="security-container">
+      <h2>Account Security</h2>
+
+      <!-- Change Password Form -->
+      <form action="/user/edit-account/" method="post">
+        <input
+          type="hidden"
+          name="csrfmiddlewaretoken"
+          value="XfHOk1zsf0C2TnuMADBO3aB2gZ22PyXrfC8zNC6cMP4zRcmgCDqXMPGPIX2xcAbC"
+        />
+
+        <label for="new-password">New Password</label>
+        <input
+          type="password"
+          id="new-password"
+          name="new_password"
+          minlength="6"
+          maxlength="64"
+          required
+          placeholder="Enter new password"
+        />
+
+        <label for="confirm-password">Confirm New Password</label>
+        <input
+          type="password"
+          id="confirm-password"
+          name="confirm_new_password"
+          minlength="6"
+          maxlength="64"
+          required
+          placeholder="Re-type new password"
+        />
+
+        <button type="submit">Change Password</button>
+      </form>
+    </div>
+  </body>
+</html>

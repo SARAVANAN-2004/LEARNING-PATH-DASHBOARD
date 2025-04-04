@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Profile Photo</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+      }
+
+      .photo-upload-container {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+        width: 400px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: #333;
+      }
+
+      .image-preview {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        border: 4px solid #ddd;
+        overflow: hidden;
+        margin: 10px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #f8f8f8;
+        position: relative;
+      }
+
+      .image-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      .upload-btn {
+        display: inline-block;
+        background-color: #007bff;
+        color: white;
+        font-size: 1rem;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background 0.3s;
+      }
+
+      .upload-btn:hover {
+        background-color: #0056b3;
+      }
+
+      .save-btn {
+        background-color: #28a745;
+        margin-top: 15px;
+      }
+
+      .save-btn:hover {
+        background-color: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="photo-upload-container">
+      <h2>Upload Profile Photo</h2>
+      <div class="image-preview" id="previewContainer">
+        <img
+          id="preview"
+          src="https://img-c.udemycdn.com/user/200_H/anonymous_3.png"
+          alt="Profile Picture"
+        />
+      </div>
+      <label class="upload-btn">
+        Choose Image
+        <input type="file" id="imageUpload" accept=".jpg, .jpeg, .png" />
+      </label>
+      <button class="upload-btn save-btn">Save</button>
+    </div>
+
+    <script>
+      document
+        .getElementById("imageUpload")
+        .addEventListener("change", function (event) {
+          const reader = new FileReader();
+          reader.onload = function () {
+            const previewImg = document.getElementById("preview");
+            previewImg.src = reader.result;
+            previewImg.style.transform = "scale(1.1)";
+          };
+          reader.readAsDataURL(event.target.files[0]);
+        });
+    </script>
+  </body>
+</html>
