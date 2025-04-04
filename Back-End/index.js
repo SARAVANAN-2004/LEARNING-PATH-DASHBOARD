@@ -139,8 +139,7 @@ app.get(
   "/auth/google/secrets",
   passport.authenticate("google", { failureRedirect: "/auth/google/failure" }),
   (req, res) => {
-    res.sendFile(path.join(__dirname, "../Front-End/After_Login/Explore.html"));
-
+    res.redirect("/Explore.html");
   }
 );
 
