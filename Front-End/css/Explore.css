@@ -98,11 +98,16 @@ h2 {
 
 /* Course Cards */
 .course-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background: white;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 0;
+    min-height: 420px;
 }
 
 .course-card:hover {
@@ -116,10 +121,13 @@ h2 {
 }
 
 .course-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     padding: 15px;
 }
 
-h3 {
+.course-info h3 {
     font-size: 18px;
     margin-bottom: 8px;
 }
@@ -135,9 +143,40 @@ h3 {
     color: #f39c12;
 }
 
-/* Button */
-button {
-    margin-top: 15px;
+.price {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.discount-price {
+    color: #e53935;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.original-price {
+    color: gray;
+    font-size: 14px;
+}
+
+.badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+
+.badges span {
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+/* Enroll Button */
+.course-info button {
+    margin-top: auto;
     padding: 10px;
     border: none;
     background: #1e3a8a;
@@ -150,6 +189,6 @@ button {
     transition: background 0.3s ease;
 }
 
-button:hover {
+.course-info button:hover {
     background: #142b6f;
 }

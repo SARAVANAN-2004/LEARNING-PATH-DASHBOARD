@@ -112,9 +112,17 @@ router.get("/", (req, res) => {
   res.sendFile(`${frontPath}/index.html`);
 });
 
-router.get("/dashboard", (req, res) => {
-    res.render("Explore", { courses });
-  });
+router.get("/dashboard", async (req, res) => {
+  try {
+    const result = await db.query("SELECT * FROM courses ORDER BY created_at DESC");
+    const courses = result.rows;
+
+    res.render("Explore", { courses }); // Pass the data to your EJS page
+  } catch (err) {
+    console.error("Error fetching courses:", err);
+    res.status(500).send("Server Error");
+  }
+});
 
 router.get("/mylearning", (req, res) => {
     res.render("mylearning", { courses: myCourses });
@@ -180,7 +188,7 @@ router.get('/create-course-content/:userId/:courseId', (req, res) => {
   const { userId, courseId } = req.params;
   console.log(`Navigated to upload course content page for user: ${userId}, course: ${courseId}`);
   res.sendFile(`${frontPath}/AddCourseContent/CreateCourse.html`);
- 
+
 });
 
 
