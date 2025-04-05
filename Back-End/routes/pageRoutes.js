@@ -19,13 +19,18 @@ router.get("/login", (req, res) => {
    // this will render views/login.ejs
 });
 
+router.get("/login.html", (req, res) => {
+  
+  res.sendFile(`${frontPath}/loginPage/loginandSignUp.html`);
+   // this will render views/login.ejs
+});
 
 router.get("/dashboard", async (req, res) => {
   try {
     const userId = req.session?.user?.id;
     console.log(userId)
     if (!userId) {
-      return res.redirect("/login.html"); // or res.status(401).send("Unauthorized")
+      return res.redirect("/login"); // or res.status(401).send("Unauthorized")
     }
 
     const result = await db.query("SELECT * FROM courses ORDER BY created_at DESC");
@@ -133,6 +138,11 @@ router.get("/viewCourse", async (req, res) => {
   }
 });
 
+// In your route file (e.g., pageroutes.js or app.js)
+router.get('/course-creation', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  res.render('EnrollmentSteps', { userId: req.session.user.id }); // Pass userId
+});
 
 
 router.post('/create-course', async (req, res) => {

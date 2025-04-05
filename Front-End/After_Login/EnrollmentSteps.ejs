@@ -6,12 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Course Creation - All Steps</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/EnrollmentSteps.css" />
+  <link rel="stylesheet" href="/css/EnrollmentSteps.css" />
+
 </head>
 
 <body>
   <div class="container">
-    <!-- Header with step indicator -->
+    <!-- Print the user ID (for testing/debug) -->
+    <p style="display: none;" id="user-id"><%= userId %></p>
+
+    <!-- Header -->
     <header class="header">
       <div class="step-indicator">
         <span class="step">Step 1 of 5</span>
@@ -163,58 +167,59 @@
   </div>
 
   <!-- JavaScript -->
-<script>
-  let selectedCourseType = "Course"; // Hardcoded courseType
+  <script>
+    const userId = "<%= userId %>";
+    let selectedCourseType = "Course";
 
-  function updateCharCount() {
-    const input = document.getElementById("course-title");
-    document.querySelector(".step-2 .char-count").textContent = 60 - input.value.length;
-  }
-
-  function previewImage() {
-    const url = document.getElementById("title-card-img").value;
-    const img = document.getElementById("preview-img");
-    if (url) {
-      img.src = url;
-      img.style.display = "block";
-    } else {
-      img.style.display = "none";
+    function updateCharCount() {
+      const input = document.getElementById("course-title");
+      document.querySelector(".step-2 .char-count").textContent = 60 - input.value.length;
     }
-  }
 
-  function updateCategorySelection() {
-    const selected = document.getElementById("category-dropdown").value;
-    courseData.category = selected;
-  }
+    function previewImage() {
+      const url = document.getElementById("title-card-img").value;
+      const img = document.getElementById("preview-img");
+      if (url) {
+        img.src = url;
+        img.style.display = "block";
+      } else {
+        img.style.display = "none";
+      }
+    }
 
-  function nextStep(stepNumber) {
-    document.querySelectorAll('.step-content').forEach(section => section.classList.remove('active'));
-    document.querySelector(`.step-${stepNumber}`).classList.add('active');
+    function updateCategorySelection() {
+      const selected = document.getElementById("category-dropdown").value;
+      courseData.category = selected;
+    }
 
-    const stepText = document.querySelector('.step-indicator .step');
-    const progress = document.querySelector('.progress');
-    stepText.textContent = `Step ${stepNumber} of 5`;
-    progress.style.width = `${(stepNumber - 1) * 25}%`;
-  }
+    function nextStep(stepNumber) {
+      document.querySelectorAll('.step-content').forEach(section => section.classList.remove('active'));
+      document.querySelector(`.step-${stepNumber}`).classList.add('active');
 
-  function previousStep(stepNumber) {
-    document.querySelectorAll('.step-content').forEach(section => section.classList.remove('active'));
-    document.querySelector(`.step-${stepNumber}`).classList.add('active');
+      const stepText = document.querySelector('.step-indicator .step');
+      const progress = document.querySelector('.progress');
+      stepText.textContent = `Step ${stepNumber} of 5`;
+      progress.style.width = `${(stepNumber - 1) * 25}%`;
+    }
 
-    const stepText = document.querySelector('.step-indicator .step');
-    const progress = document.querySelector('.progress');
-    stepText.textContent = `Step ${stepNumber} of 5`;
-    progress.style.width = `${(stepNumber - 1) * 25}%`;
-  }
+    function previousStep(stepNumber) {
+      document.querySelectorAll('.step-content').forEach(section => section.classList.remove('active'));
+      document.querySelector(`.step-${stepNumber}`).classList.add('active');
 
-  document.querySelectorAll('input[name="time"]').forEach(radio => {
-    radio.addEventListener('change', () => {
-      courseData.timeCommitment = radio.value;
+      const stepText = document.querySelector('.step-indicator .step');
+      const progress = document.querySelector('.progress');
+      stepText.textContent = `Step ${stepNumber} of 5`;
+      progress.style.width = `${(stepNumber - 1) * 25}%`;
+    }
+
+    document.querySelectorAll('input[name="time"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        courseData.timeCommitment = radio.value;
+      });
     });
-  });
 
-  function submitCourseData() {
-    const courseData = {
+    function submitCourseData() {
+      const courseData = {
         courseType: selectedCourseType,
         title: document.getElementById('course-title').value.trim(),
         imageUrl: document.getElementById('title-card-img').value.trim(),
@@ -228,41 +233,40 @@
         discountedPrice: parseFloat(document.getElementById('discounted-price').value),
         rating: parseFloat(document.getElementById('rating').value),
         badges: document.getElementById('badges').value.split(',').map(b => b.trim()),
-        userId: 1 // replace with dynamic user if needed
-    };
+        userId: userId // Use from EJS variable
+      };
 
-
-    if (!courseData.title || !courseData.category || !courseData.timeCommitment) {
+      if (!courseData.title || !courseData.category || !courseData.timeCommitment) {
         alert("Please fill all required fields.");
         return;
-    }
+      }
 
-    fetch('/create-course', {
+      fetch('/create-course', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(courseData)
-    })
+      })
         .then(res => res.json())
         .then(data => {
-        if (data.success) {
+          if (data.success) {
             alert("✅ Course created successfully!");
             window.location.href = `/create-course-content/${data.userId}/${data.courseId}`;
-        } else {
+          } else {
             alert("❌ Error: " + (data.message || "Something went wrong"));
-        }
+          }
         })
         .catch(err => {
-        console.error("Error:", err);
-        alert("❌ Failed to create course.");
+          console.error("Error:", err);
+          alert("❌ Failed to create course.");
         });
     }
 
-
-  function exitCourseCreation() {
-    if (confirm("Are you sure you want to exit? All progress will be lost.")) {
-      window.location.href = '/';
+    function exitCourseCreation() {
+      if (confirm("Are you sure you want to exit? All progress will be lost.")) {
+        window.location.href = '/';
+      }
     }
-  }
-</script>
+  </script>
 </body>
+
 </html>
