@@ -46,7 +46,7 @@
                 <span class="<%= badge.toLowerCase() %>"><%= badge %></span>
               <% }) %>
             </div>
-            <button onclick="goToCourse('<%= course.title %>')">Enroll Now</button>
+            <button onclick="enroll('<%= course.id %>')">Enroll Now</button>
           </div>
         </div>
       <% }) %>
@@ -54,9 +54,24 @@
   </main>
 
   <script>
-    function goToCourse(courseName) {
-      alert(`Navigating to ${courseName} course...`);
+    async function enroll(courseId) {
+      try {
+        const response = await fetch('/enroll', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ courseId })
+        });
+  
+        const result = await response.text();
+        alert(result);
+      } catch (err) {
+        console.error("Enrollment failed:", err);
+        alert("Something went wrong. Please try again.");
+      }
     }
   </script>
+  
 </body>
 </html>

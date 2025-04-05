@@ -47,7 +47,7 @@
                             <% if (course.premium) { %><span class="premium">Premium</span><% } %>
                             <% if (course.bestseller) { %><span class="bestseller">Bestseller</span><% } %>
                         </div>
-                        <button onclick="location.href='/viewCourse'">Go to Course</button>
+                        <button onclick="location.href='/viewCourse?courseId=<%= course.id %>'">Go to Course</button>
                     </div>
                 </div>
             <% }) %>

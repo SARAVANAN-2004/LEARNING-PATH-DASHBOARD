@@ -10,42 +10,6 @@ router.use(express.static('public'));
 
 
 
-const myCourses = [
-    {
-      title: "Mathematics for Machine Learning",
-      instructor: "Imperial College London",
-      rating: "4.7",
-      reviews: "52,564",
-      price: "₹549",
-      originalPrice: "₹3,499",
-      premium: true,
-      bestseller: true,
-      image: "https://th.bing.com/th/id/OIP.5W7SoEe8_fvu_o-USMvp7QHaE_?rs=1&pid=ImgDetMain"
-    },
-    {
-      title: "SQL Masterclass: Learn SQL for Data Science",
-      instructor: "Jose Portilla",
-      rating: "4.7",
-      reviews: "35,452",
-      price: "₹699",
-      originalPrice: "₹3,999",
-      premium: true,
-      bestseller: false,
-      image: "https://s3.amazonaws.com/freecodecamp/news-sql-full-course.jpg"
-    },
-    {
-      title: "Microsoft Power BI - Data Analytics Essentials",
-      instructor: "Kirill Eremenko",
-      rating: "4.8",
-      reviews: "42,865",
-      price: "₹799",
-      originalPrice: "₹4,499",
-      premium: false,
-      bestseller: true,
-      image: "https://th.bing.com/th/id/OIP.nYNpnca4xSfnEsLF4wE6DgHaF9?rs=1&pid=ImgDetMain"
-    }
-  ];
-
 const courseContent = {
 title: "Advanced Algebra",
 description: "Master Algebra with step-by-step video tutorials and practice problems.",
@@ -96,9 +60,8 @@ router.get("/dashboard", async (req, res) => {
 
 router.get("/mylearning", async (req, res) => {
   try {
-    const userId = 1; // Replace with req.user.id if using authentication
+    const userId = 1; 
 
-    // Step 1: Get the list of enrolled course IDs
     const enrolledCoursesQuery = await db.query(
       "SELECT course_id FROM user_courses WHERE user_id = $1",
       [userId]
@@ -106,12 +69,10 @@ router.get("/mylearning", async (req, res) => {
 
     const courseIds = enrolledCoursesQuery.rows.map(row => row.course_id);
 
-    // If no courses found, render empty view
     if (courseIds.length === 0) {
       return res.render("mylearning", { courses: [] });
     }
 
-    // Step 2: Fetch full course details using course IDs
     const courseDetailsQuery = await db.query(
       `SELECT * FROM courses WHERE id = ANY($1)`,
       [courseIds]
@@ -119,7 +80,6 @@ router.get("/mylearning", async (req, res) => {
 
     const myCourses = courseDetailsQuery.rows;
 
-    // Step 3: Render EJS view with course details
     res.render("mylearning", { courses: myCourses });
 
   } catch (error) {
@@ -128,9 +88,67 @@ router.get("/mylearning", async (req, res) => {
   }
 });
 
-router.get('/viewCourse', (req, res) => {
-    res.render('viewCourse', { courseContent });
+
+router.get("/viewCourse", async (req, res) => {
+  try {
+    const course_id = req.query.courseId; // In production, get this from req.query.course_id or req.params
+
+    // Step 1: Get course content
+    const contentResult = await db.query(
+      "SELECT content FROM course_contents WHERE course_id = $1",
+      [course_id]
+    );
+
+    if (contentResult.rows.length === 0) {
+      return res.status(404).send("Course content not found");
+    }
+
+    const courseContent = contentResult.rows[0].content;
+
+    // Step 2: Get course details
+    const courseResult = await db.query(
+      "SELECT * FROM courses WHERE id = $1",
+      [course_id]
+    );
+
+    if (courseResult.rows.length === 0) {
+      return res.status(404).send("Course not found");
+    }
+
+    const courseDetails = courseResult.rows[0];
+
+    // Step 3: Format YouTube links to embeddable ones
+    courseContent.sections.forEach((section) => {
+      section.lessons.forEach((lesson) => {
+        const videoUrl = lesson.video;
+
+        if (videoUrl.includes("youtu.be")) {
+          const videoId = videoUrl.split("youtu.be/")[1].split("?")[0];
+          lesson.video = `https://www.youtube.com/embed/${videoId}`;
+        } else if (videoUrl.includes("watch?v=")) {
+          const videoId = videoUrl.split("watch?v=")[1].split("&")[0];
+          lesson.video = `https://www.youtube.com/embed/${videoId}`;
+        }
+        // else keep the video as-is if already embedded
+      });
+    });
+
+    // Optional debug logs
+    console.log("✅ Course Content:", JSON.stringify(courseContent, null, 2));
+    console.log("✅ Course Details:", JSON.stringify(courseDetails, null, 2));
+
+    // Step 4: Render EJS template with content + details
+    res.render("viewCourse", {
+      courseContent,
+      courseDetails,
+    });
+
+  } catch (error) {
+    console.error("❌ Error in /viewCourse:", error.message);
+    res.status(500).send("Server Error");
+  }
 });
+
 
 
 router.post('/create-course', async (req, res) => {
@@ -210,6 +228,41 @@ router.post("/create-course-content", async (req, res) => {
   } catch (err) {
     console.error("Error inserting course content:", err.message);
     res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+
+router.post("/enroll", async (req, res) => {
+  try {
+    const { courseId } = req.body;
+
+    // Replace with actual logged-in user ID from session or auth
+    const userId = req.user?.id || 1; // Example fallback
+
+    if (!courseId || isNaN(courseId)) {
+      return res.status(400).send("Invalid course ID");
+    }
+
+    // Check if already enrolled
+    const exists = await db.query(
+      "SELECT * FROM user_courses WHERE user_id = $1 AND course_id = $2",
+      [userId, courseId]
+    );
+
+    if (exists.rows.length > 0) {
+      return res.status(200).send("Already enrolled in this course");
+    }
+
+    // Enroll the user
+    await db.query(
+      "INSERT INTO user_courses (user_id, course_id) VALUES ($1, $2)",
+      [userId, courseId]
+    );
+
+    res.status(200).send("Successfully enrolled!");
+  } catch (err) {
+    console.error("❌ Enrollment error:", err.message);
+    res.status(500).send("Enrollment failed");
   }
 });
 
