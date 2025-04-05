@@ -108,6 +108,34 @@
           <div class="char-count">160</div>
         </div>
 
+        <!-- Add this inside Step 4 section after 'Who is this course for?' textarea -->
+
+        <div class="course-description">
+            <label for="instructor-name">Instructor Name</label>
+            <input type="text" id="instructor-name" placeholder="e.g. John Doe" />
+        </div>
+        
+        <div class="course-description">
+            <label for="original-price">Original Price (INR)</label>
+            <input type="number" id="original-price" placeholder="e.g. 1999" />
+        </div>
+        
+        <div class="course-description">
+            <label for="discounted-price">Discounted Price (INR)</label>
+            <input type="number" id="discounted-price" placeholder="e.g. 499" />
+        </div>
+        
+        <div class="course-description">
+            <label for="rating">Course Rating (default is 5)</label>
+            <input type="number" id="rating" min="1" max="5" value="5" />
+        </div>
+        
+        <div class="course-description">
+            <label for="badges">Badges (comma-separated)</label>
+            <input type="text" id="badges" placeholder='e.g. Premium, Bestseller' />
+        </div>
+  
+
         <div class="action-btns">
           <button class="previous-btn" onclick="previousStep(3)">Previous</button>
           <button class="next-btn" onclick="nextStep(5)">Next</button>
@@ -187,29 +215,35 @@
 
   function submitCourseData() {
     const courseData = {
-      courseType: selectedCourseType,
-      title: document.getElementById('course-title').value.trim(),
-      imageUrl: document.getElementById('title-card-img').value.trim(),
-      category: document.getElementById('category-dropdown').value,
-      learnObjectives: document.getElementById('learn-objectives').value.trim(),
-      requirements: document.getElementById('requirements').value.trim(),
-      whoIsThisFor: document.getElementById('who-is-this-for').value.trim(),
-      timeCommitment: document.querySelector('input[name="time"]:checked')?.value || "",
-      userId: 1 // or replace dynamically
+        courseType: selectedCourseType,
+        title: document.getElementById('course-title').value.trim(),
+        imageUrl: document.getElementById('title-card-img').value.trim(),
+        category: document.getElementById('category-dropdown').value,
+        learnObjectives: document.getElementById('learn-objectives').value.trim(),
+        requirements: document.getElementById('requirements').value.trim(),
+        whoIsThisFor: document.getElementById('who-is-this-for').value.trim(),
+        timeCommitment: document.querySelector('input[name="time"]:checked')?.value || "",
+        instructorName: document.getElementById('instructor-name').value.trim(),
+        originalPrice: parseFloat(document.getElementById('original-price').value),
+        discountedPrice: parseFloat(document.getElementById('discounted-price').value),
+        rating: parseFloat(document.getElementById('rating').value),
+        badges: document.getElementById('badges').value.split(',').map(b => b.trim()),
+        userId: 1 // replace with dynamic user if needed
     };
 
+
     if (!courseData.title || !courseData.category || !courseData.timeCommitment) {
-      alert("Please fill all required fields.");
-      return;
+        alert("Please fill all required fields.");
+        return;
     }
 
     fetch('/create-course', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(courseData)
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(courseData)
     })
-      .then(res => res.json())
-      .then(data => {
+        .then(res => res.json())
+        .then(data => {
         if (data.success) {
             alert("✅ Course created successfully!");
             window.location.href = `/create-course-content/${data.userId}/${data.courseId}`;
@@ -217,11 +251,12 @@
             alert("❌ Error: " + (data.message || "Something went wrong"));
         }
         })
-      .catch(err => {
+        .catch(err => {
         console.error("Error:", err);
         alert("❌ Failed to create course.");
-      });
-  }
+        });
+    }
+
 
   function exitCourseCreation() {
     if (confirm("Are you sure you want to exit? All progress will be lost.")) {

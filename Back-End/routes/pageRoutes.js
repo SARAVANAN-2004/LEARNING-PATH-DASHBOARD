@@ -126,34 +126,51 @@ router.get('/viewCourse', (req, res) => {
 
 
 router.post('/create-course', async (req, res) => {
-  const {
-    courseType, title, imageUrl, category,
-    description, requirements, targetAudience,
-    timeCommitment, userId
-  } = req.body;
-
   try {
+    const {
+      userId,
+      courseType,
+      title,
+      imageUrl,
+      category,
+      learnObjectives,
+      requirements,
+      whoIsThisFor,
+      timeCommitment,
+      instructorName,
+      originalPrice,
+      discountedPrice,
+      rating,
+      badges
+    } = req.body;
+
     const result = await db.query(
       `INSERT INTO courses 
-        (course_type, title, image_url, category, description, requirements, target_audience, time_commitment, user_id)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-       RETURNING id`,
-      [courseType, title, imageUrl, category, description, requirements, targetAudience, timeCommitment, userId]
+      (user_id, course_type, title, image_url, category, description, requirements, target_audience, time_commitment, instructor, original_price, price, rating, badges)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+      RETURNING id`,
+      [
+        userId,
+        courseType,
+        title,
+        imageUrl,
+        category,
+        learnObjectives,
+        requirements,
+        whoIsThisFor,
+        timeCommitment,
+        instructorName,
+        originalPrice,
+        discountedPrice,
+        rating,
+        badges
+      ]
     );
 
-    const courseId = result.rows[0].id;
-    console.log(`Course created with ID: ${courseId}`);
-
-    res.status(200).json({
-      success: true,
-      message: 'Course created successfully!',
-      courseId,
-      userId
-    });
-
-  } catch (err) {
-    console.error("DB error:", err.message);
-    res.status(500).json({ success: false, message: "Database error occurred" });
+    res.json({ success: true, courseId: result.rows[0].id, userId });
+  } catch (error) {
+    console.error("Error creating course:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
 
