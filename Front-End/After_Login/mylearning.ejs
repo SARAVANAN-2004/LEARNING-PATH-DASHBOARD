@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IQMath Dashboard</title>
+    <link rel="stylesheet" href="/css/Explore.css">
+</head>
+<body>
+    <header>
+        <div class="logo">IQMath</div>
+        
+        <nav>
+            <ul class="nav-links">
+                <li><a href="/dashboard">Explore</a></li>
+                <li><a href="/AddCourseContent/MainCoursePage.html">Teach on IQMath</a></li>
+                <li><a href="/mylearning">My Learning</a></li>
+            </ul>
+        </nav>
+
+        <input type="text" class="search-bar" placeholder="Search courses...">
+
+        <div class="icons">
+            <span class="icon">🛒</span>
+            <span class="icon">🔔</span>
+            <a href="/Profile/index.html"><span class="icon">👤</span></a>
+        </div>
+    </header>
+
+    <main>
+        <h2>My Courses</h2>
+        <div class="courses-container">
+            <% courses.forEach(course => { %>
+                <div class="course-card">
+                    <div class="image-container">
+                        <img src="<%= course.image %>" alt="Course Image">
+                    </div>
+                    <div class="course-info">
+                        <h3><%= course.title %></h3>
+                        <p class="instructor">Instructor: <%= course.instructor %></p>
+                        <div class="rating">⭐ <%= course.rating %> (<%= course.reviews %> reviews)</div>
+                        <div class="price">
+                            <span class="discount-price"><%= course.price %></span>
+                            <span class="original-price" style="text-decoration: line-through;"><%= course.originalPrice %></span>
+                        </div>
+                        <div class="badges">
+                            <% if (course.premium) { %><span class="premium">Premium</span><% } %>
+                            <% if (course.bestseller) { %><span class="bestseller">Bestseller</span><% } %>
+                        </div>
+                        <button onclick="location.href='/viewCourse'">Go to Course</button>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </main>
+</body>
+</html>
