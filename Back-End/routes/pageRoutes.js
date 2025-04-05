@@ -8,37 +8,7 @@ const __dirname = path.dirname(__filename);
 const frontPath = path.join(__dirname, "../../Front-End");
 router.use(express.static('public'));
 
-const courses = [
-    {
-      title: "Ultimate AWS Certified Solutions Architect Associate 2025",
-      instructor: "Stephane Maarek",
-      rating: "⭐ 4.7 (252,564 reviews)",
-      price: "₹549",
-      originalPrice: "₹3,499",
-      badges: ["Premium", "Bestseller"],
-      image: "https://img-c.udemycdn.com/course/240x135/2196488_8fc7_10.jpg"
-    },
-    {
-      title: "Python for Data Science and Machine Learning Bootcamp",
-      instructor: "Jose Portilla",
-      rating: "⭐ 4.6 (200,432 reviews)",
-      price: "₹699",
-      originalPrice: "₹3,999",
-      badges: ["Premium"],
-      image: "https://img-c.udemycdn.com/course/240x135/567828_67d0.jpg"
 
-    },
-    {
-      title: "React - The Complete Guide (2025 Edition)",
-      instructor: "Maximilian Schwarzmüller",
-      rating: "⭐ 4.8 (182,342 reviews)",
-      price: "₹799",
-      originalPrice: "₹4,499",
-      badges: ["Bestseller"],
-      image: "https://img-c.udemycdn.com/course/240x135/1565838_e54e_16.jpg"
-
-    }
-  ];
 
 const myCourses = [
     {
@@ -124,8 +94,38 @@ router.get("/dashboard", async (req, res) => {
   }
 });
 
-router.get("/mylearning", (req, res) => {
+router.get("/mylearning", async (req, res) => {
+  try {
+    const userId = 1; // Replace with req.user.id if using authentication
+
+    // Step 1: Get the list of enrolled course IDs
+    const enrolledCoursesQuery = await db.query(
+      "SELECT course_id FROM user_courses WHERE user_id = $1",
+      [userId]
+    );
+
+    const courseIds = enrolledCoursesQuery.rows.map(row => row.course_id);
+
+    // If no courses found, render empty view
+    if (courseIds.length === 0) {
+      return res.render("mylearning", { courses: [] });
+    }
+
+    // Step 2: Fetch full course details using course IDs
+    const courseDetailsQuery = await db.query(
+      `SELECT * FROM courses WHERE id = ANY($1)`,
+      [courseIds]
+    );
+
+    const myCourses = courseDetailsQuery.rows;
+
+    // Step 3: Render EJS view with course details
     res.render("mylearning", { courses: myCourses });
+
+  } catch (error) {
+    console.error("Error fetching My Learning courses:", error.message);
+    res.status(500).send("Server Error");
+  }
 });
 
 router.get('/viewCourse', (req, res) => {

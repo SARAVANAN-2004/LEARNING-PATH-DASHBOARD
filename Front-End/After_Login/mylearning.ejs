@@ -33,7 +33,7 @@
             <% courses.forEach(course => { %>
                 <div class="course-card">
                     <div class="image-container">
-                        <img src="<%= course.image %>" alt="Course Image">
+                        <img src="<%= course.image_url%>" alt="Course Image">
                     </div>
                     <div class="course-info">
                         <h3><%= course.title %></h3>
@@ -41,7 +41,7 @@
                         <div class="rating">⭐ <%= course.rating %> (<%= course.reviews %> reviews)</div>
                         <div class="price">
                             <span class="discount-price"><%= course.price %></span>
-                            <span class="original-price" style="text-decoration: line-through;"><%= course.originalPrice %></span>
+                            <span class="original-price" style="text-decoration: line-through;"><%= course.original_price %></span>
                         </div>
                         <div class="badges">
                             <% if (course.premium) { %><span class="premium">Premium</span><% } %>
