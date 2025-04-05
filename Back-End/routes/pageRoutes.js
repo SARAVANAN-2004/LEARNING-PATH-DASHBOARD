@@ -9,58 +9,42 @@ const frontPath = path.join(__dirname, "../../Front-End");
 router.use(express.static('public'));
 
 
-
-const courseContent = {
-title: "Advanced Algebra",
-description: "Master Algebra with step-by-step video tutorials and practice problems.",
-overview: "This course covers all essential algebra topics, from basic equations to real-world applications.",
-sections: [
-    {
-    title: "Section 1: Basics of Algebra",
-    lessons: [
-        { title: "Lesson 1: Introduction", videoId: "5-k2FJHDFoQ" },
-        { title: "Lesson 2: Solving Equations", videoId: "kM9ASKAnmP8" },
-        { title: "Lesson 3: Quadratic Functions", videoId: "aJbJxGJqF_E" }
-    ]
-    },
-    {
-    title: "Section 2: Advanced Topics",
-    lessons: [
-        { title: "Lesson 4: Polynomials", videoId: "YcUbk60PSjU" },
-        { title: "Lesson 5: Logarithms", videoId: "sXN-m48ErD8" },
-        { title: "Lesson 6: Matrices", videoId: "frVco3fX_l4" }
-    ]
-    },
-    {
-    title: "Section 3: Real-World Applications",
-    lessons: [
-        { title: "Lesson 7: Algebra in Physics", videoId: "e0bnUlSOnbU" },
-        { title: "Lesson 8: Algebra in Finance", videoId: "ylKx2BojXNc" },
-        { title: "Lesson 9: Data Science & Algebra", videoId: "Z1Yd7upQsXY" }
-    ]
-    },
-]
-};
-
 router.get("/", (req, res) => {
   res.sendFile(`${frontPath}/index.html`);
 });
 
+router.get("/login", (req, res) => {
+  
+  res.sendFile(`${frontPath}/loginPage/loginandSignUp.html`);
+   // this will render views/login.ejs
+});
+
+
 router.get("/dashboard", async (req, res) => {
   try {
+    const userId = req.session?.user?.id;
+    console.log(userId)
+    if (!userId) {
+      return res.redirect("/login.html"); // or res.status(401).send("Unauthorized")
+    }
+
     const result = await db.query("SELECT * FROM courses ORDER BY created_at DESC");
     const courses = result.rows;
 
-    res.render("Explore", { courses }); // Pass the data to your EJS page
+    res.render("Explore", {
+      courses,
+      userId,
+    });
   } catch (err) {
     console.error("Error fetching courses:", err);
     res.status(500).send("Server Error");
   }
 });
 
+
 router.get("/mylearning", async (req, res) => {
   try {
-    const userId = 1; 
+    const userId = req.session?.user?.id;
 
     const enrolledCoursesQuery = await db.query(
       "SELECT course_id FROM user_courses WHERE user_id = $1",
@@ -233,38 +217,27 @@ router.post("/create-course-content", async (req, res) => {
 
 
 router.post("/enroll", async (req, res) => {
+  const { userId, courseId } = req.body;
+
+  if (!userId || !courseId) {
+    return res.status(400).json({ error: "Missing userId or courseId" });
+  }
+
   try {
-    const { courseId } = req.body;
-
-    // Replace with actual logged-in user ID from session or auth
-    const userId = req.user?.id || 1; // Example fallback
-
-    if (!courseId || isNaN(courseId)) {
-      return res.status(400).send("Invalid course ID");
-    }
-
-    // Check if already enrolled
-    const exists = await db.query(
-      "SELECT * FROM user_courses WHERE user_id = $1 AND course_id = $2",
-      [userId, courseId]
-    );
-
-    if (exists.rows.length > 0) {
-      return res.status(200).send("Already enrolled in this course");
-    }
-
-    // Enroll the user
     await db.query(
-      "INSERT INTO user_courses (user_id, course_id) VALUES ($1, $2)",
+      `INSERT INTO user_courses (user_id, course_id)
+       VALUES ($1, $2)
+       ON CONFLICT (user_id, course_id) DO NOTHING`,
       [userId, courseId]
     );
 
-    res.status(200).send("Successfully enrolled!");
+    res.status(200).json({ message: "Enrolled successfully!" });
   } catch (err) {
-    console.error("❌ Enrollment error:", err.message);
-    res.status(500).send("Enrollment failed");
+    console.error("Error enrolling user:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 
 export default router;

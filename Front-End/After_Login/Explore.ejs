@@ -36,10 +36,10 @@
           <div class="course-info">
             <h3><%= course.title %></h3>
             <p class="instructor">Instructor: <%= course.instructor %></p>
-            <div class="rating"><%= course.rating %></div>
+            <div class="rating">⭐ <%= course.rating %></div>
             <div class="price">
-              <span class="discount-price"><%= course.price %></span>
-              <span class="original-price" style="text-decoration: line-through;"><%= course.original_price %></span>
+              <span class="discount-price">₹<%= course.price %></span>
+              <span class="original-price" style="text-decoration: line-through;">₹<%= course.original_price %></span>
             </div>
             <div class="badges">
               <% course.badges.forEach(badge => { %>
@@ -54,6 +54,12 @@
   </main>
 
   <script>
+    const userId = "<%= userId %>";
+
+    window.onload = () => {
+    console.log("Logged in User ID:", userId);
+  };
+
     async function enroll(courseId) {
       try {
         const response = await fetch('/enroll', {
@@ -61,17 +67,16 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ courseId })
+          body: JSON.stringify({ userId, courseId })
         });
-  
-        const result = await response.text();
-        alert(result);
+
+        const data = await response.json();
+        alert(data.message || "Enrolled successfully!");
       } catch (err) {
         console.error("Enrollment failed:", err);
         alert("Something went wrong. Please try again.");
       }
     }
   </script>
-  
 </body>
 </html>
