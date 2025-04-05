@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Create Course with Sections and Lessons</title>
-  <link rel="stylesheet" href="../css/CreateCourse.css">
+  <link rel="stylesheet" href="/css/CreateCourse.css">
 </head>
 <body>
   <div class="container">
@@ -41,7 +41,7 @@
       lesson.className = "lesson";
       lesson.innerHTML = `
         <input type="text" placeholder="Lesson Title" class="lesson-title">
-        <input type="text" placeholder="YouTube Video URL" oninput="embedVideo(this)">
+        <input type="text" placeholder="YouTube Video URL" class="lesson-video" oninput="embedVideo(this)">
         <div class="video-preview"></div>
         <textarea placeholder="Add Resources (optional)" class="lesson-resources" rows="2"></textarea>
       `;
@@ -61,7 +61,7 @@
             const urlParams = new URLSearchParams(new URL(url).search);
             videoId = urlParams.get("v");
           }
-          videoPreview.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+          videoPreview.innerHTML = `<iframe width="300" height="180" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
         } else {
           videoPreview.innerHTML = `<p style="color:red;">Invalid YouTube URL</p>`;
         }
@@ -71,8 +71,9 @@
     }
 
     function submitCourse() {
-      const courseData = [];
+      
       const sections = document.querySelectorAll(".section");
+      const courseData = [];
 
       sections.forEach(section => {
         const sectionTitle = section.querySelector(".section-title").value;
@@ -81,26 +82,36 @@
 
         lessons.forEach(lesson => {
           const title = lesson.querySelector(".lesson-title").value;
-          const videoInput = lesson.querySelector("input[type='text']").value;
+          const video = lesson.querySelector(".lesson-video").value;
           const resources = lesson.querySelector(".lesson-resources").value;
-          lessonData.push({ title, video: videoInput, resources });
+          lessonData.push({ title, video, resources });
         });
 
-        courseData.push({
-          sectionTitle,
-          lessons: lessonData
-        });
+        courseData.push({ sectionTitle, lessons: lessonData });
       });
 
       const summary = document.getElementById("courseSummary").value;
+      const pathParts = window.location.pathname.split('/');
+      const userId = pathParts[pathParts.length - 2];
+      const courseId = pathParts[pathParts.length - 1];
 
-      const fullCourse = {
-        sections: courseData,
-        summary: summary
-      };
 
-      console.log("Submitted Course:", fullCourse);
-      alert("Course submitted! Check console for data.");
+      fetch("/create-course-content", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ courseId, userId, summary, sections: courseData })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert("✅ Course content uploaded!");
+        console.log(data);
+      })
+      .catch(err => {
+        alert("❌ Error uploading course content.");
+        console.error(err);
+      });
     }
   </script>
 </body>

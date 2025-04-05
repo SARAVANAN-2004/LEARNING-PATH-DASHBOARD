@@ -1,11 +1,12 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-
+import { db } from "../config/db.js";
 const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const frontPath = path.join(__dirname, "../../Front-End");
+router.use(express.static('public'));
 
 const courses = [
     {
@@ -122,6 +123,70 @@ router.get("/mylearning", (req, res) => {
 router.get('/viewCourse', (req, res) => {
     res.render('viewCourse', { courseContent });
 });
-  
+
+
+router.post('/create-course', async (req, res) => {
+  const {
+    courseType, title, imageUrl, category,
+    description, requirements, targetAudience,
+    timeCommitment, userId
+  } = req.body;
+
+  try {
+    const result = await db.query(
+      `INSERT INTO courses 
+        (course_type, title, image_url, category, description, requirements, target_audience, time_commitment, user_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       RETURNING id`,
+      [courseType, title, imageUrl, category, description, requirements, targetAudience, timeCommitment, userId]
+    );
+
+    const courseId = result.rows[0].id;
+    console.log(`Course created with ID: ${courseId}`);
+
+    res.status(200).json({
+      success: true,
+      message: 'Course created successfully!',
+      courseId,
+      userId
+    });
+
+  } catch (err) {
+    console.error("DB error:", err.message);
+    res.status(500).json({ success: false, message: "Database error occurred" });
+  }
+});
+
+
+
+router.get('/create-course-content/:userId/:courseId', (req, res) => {
+  const { userId, courseId } = req.params;
+  console.log(`Navigated to upload course content page for user: ${userId}, course: ${courseId}`);
+  res.sendFile(`${frontPath}/AddCourseContent/CreateCourse.html`);
+ 
+});
+
+
+router.post("/create-course-content", async (req, res) => {
+  const { userId, courseId, summary, sections } = req.body;
+  console.log("from the post "+userId+" "+courseId);
+  const content = {
+    summary,
+    sections
+  };
+
+  try {
+    await db.query(
+      `INSERT INTO course_contents (user_id, course_id, content) VALUES ($1, $2, $3)`,
+      [userId, courseId, JSON.stringify(content)]
+    );
+
+    res.status(200).json({ success: true, message: "Course content saved successfully" });
+  } catch (err) {
+    console.error("Error inserting course content:", err.message);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
 
 export default router;

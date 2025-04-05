@@ -2,63 +2,70 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Creation - All Steps</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/EnrollmentSteps.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Creation - All Steps</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/EnrollmentSteps.css" />
 </head>
 
 <body>
-    <div class="container">
-        <!-- Header with step indicator -->
-        <header class="header">
-            <div class="step-indicator">
-                <span class="step">Step 1 of 5</span>
-                <div class="progress-bar">
-                    <div class="progress" style="width: 0%;"></div>
-                </div>
-            </div>
-            <button class="exit-btn" onclick="exitCourseCreation()">Exit</button>
-        </header>
+  <div class="container">
+    <!-- Header with step indicator -->
+    <header class="header">
+      <div class="step-indicator">
+        <span class="step">Step 1 of 5</span>
+        <div class="progress-bar">
+          <div class="progress" style="width: 0%"></div>
+        </div>
+      </div>
+      <button class="exit-btn" onclick="exitCourseCreation()">Exit</button>
+    </header>
 
-        <!-- Main content -->
-        <main class="main-content">
-            <!-- Step 1: Select Course Type -->
-            <section class="step-content step-1 active">
-                <h1>First, let's find out what type of course you're making.</h1>
-                <div class="options">
-                    <div class="option" onclick="selectCourseType('Course')">
-                        <img src="https://via.placeholder.com/100" alt="Course">
-                        <h3>Course</h3>
-                        <p>Create rich learning experiences with the help of video lectures, quizzes, coding exercises, etc.</p>
-                    </div>
-                    <div class="option" onclick="selectCourseType('Practice Test')">
-                        <img src="https://via.placeholder.com/100" alt="Practice Test">
-                        <h3>Practice Test</h3>
-                        <p>Help students prepare for certification exams by providing practice questions.</p>
-                    </div>
-                </div>
-                <button class="next-btn" onclick="nextStep(2)">Next</button>
-            </section>
+    <!-- Main content -->
+    <main class="main-content">
+      <!-- Step 1: Select Course Type -->
+      <section class="step-content step-1 active">
+        <h1>First, let's find out what type of course you're making.</h1>
+        <div class="options">
+          <div class="option" onclick="selectCourseType('Course')">
+            <img src="https://via.placeholder.com/100" alt="Course" />
+            <h3>Course</h3>
+            <p>
+              Create rich learning experiences with the help of video lectures, quizzes, coding exercises, etc.
+            </p>
+          </div>
+        </div>
+        <button class="next-btn" onclick="nextStep(2)">Next</button>
+      </section>
 
-            <!-- Step 2: Course Title -->
-            <section class="step-content step-2">
-                <h1>How about a working title?</h1>
-                <p>It's ok if you can't think of a good title now. You can change it later.</p>
-                <input type="text" id="course-title" placeholder="e.g. Learn Photoshop CS6 from Scratch" oninput="updateCharCount()">
-                <div class="char-count">60</div>
-                <div class="action-btns">
-                    <button class="previous-btn" onclick="previousStep(1)">Previous</button>
-                    <button class="next-btn" onclick="nextStep(3)">Next</button>
-                </div>
-            </section>
+      <!-- Step 2: Course Title + Image URL -->
+      <section class="step-content step-2">
+        <h1>How about a working title?</h1>
+        <p>It's ok if you can't think of a good title now. You can change it later.</p>
+        <input type="text" id="course-title" placeholder="e.g. Learn Photoshop CS6 from Scratch" oninput="updateCharCount()" />
+        <div class="char-count">60</div>
 
-            <!-- Step 3: Category Selection -->
-            <section class="step-content step-3">
-                <h1>What category best fits the knowledge you'll share?</h1>
-                <p>If you're not sure about the right category, you can change it later.</p>
-                <select class="category-dropdown" id="category-dropdown" onchange="updateCategorySelection()">
+        <!-- Title Card Image URL Input -->
+        <div class="image-upload">
+          <label for="title-card-img">Paste an image URL for the title card:</label>
+          <input type="text" id="title-card-img" placeholder="e.g. https://example.com/image.png" oninput="previewImage()" />
+          <div id="image-preview" style="margin-top: 10px;">
+            <img id="preview-img" src="" alt="Image Preview" style="max-width: 300px; display: none;" />
+          </div>
+        </div>
+
+        <div class="action-btns">
+          <button class="previous-btn" onclick="previousStep(1)">Previous</button>
+          <button class="next-btn" onclick="nextStep(3)">Next</button>
+        </div>
+      </section>
+
+      <!-- Step 3: Category Selection -->
+      <section class="step-content step-3">
+        <h1>What category best fits the knowledge you'll share?</h1>
+        <p>If you're not sure about the right category, you can change it later.</p>
+        <select class="category-dropdown" id="category-dropdown" onchange="updateCategorySelection()">
           <option value="" disabled selected>Choose a category</option>
           <option value="development">Development</option>
           <option value="business">Business</option>
@@ -75,106 +82,152 @@
           <option value="teaching_academics">Teaching & Academics</option>
           <option value="dont_know">I don't know yet</option>
         </select>
-                <button class="continue-btn" onclick="nextStep(4)">Continue</button>
-            </section>
+        <button class="continue-btn" onclick="nextStep(4)">Continue</button>
+      </section>
 
-            <!-- Step 4: Plan Your Course (Course Description and Prerequisites) -->
-            <section class="step-content step-4">
-                <h1>Plan your course</h1>
-                <h3>Intended Learners</h3>
-                <div class="course-description">
-                    <label for="learn-objectives">What will students learn in your course?</label>
-                    <textarea id="learn-objectives" placeholder="Example: Define the roles and responsibilities of a project manager"></textarea>
-                    <div class="char-count">160</div>
-                </div>
+      <!-- Step 4: Course Plan -->
+      <section class="step-content step-4">
+        <h1>Plan your course</h1>
+        <h3>Intended Learners</h3>
 
-                <div class="course-description">
-                    <label for="requirements">What are the requirements or prerequisites for taking your course?</label>
-                    <textarea id="requirements" placeholder="Example: No programming experience needed. You will learn everything you need to know."></textarea>
-                    <div class="char-count">160</div>
-                </div>
+        <div class="course-description">
+          <label for="learn-objectives">What will students learn in your course?</label>
+          <textarea id="learn-objectives" placeholder="Example: Define the roles and responsibilities of a project manager"></textarea>
+          <div class="char-count">160</div>
+        </div>
 
-                <div class="course-description">
-                    <label for="who-is-this-for">Who is this course for?</label>
-                    <textarea id="who-is-this-for" placeholder="Example: Beginner Python developers curious about data science."></textarea>
-                    <div class="char-count">160</div>
-                </div>
+        <div class="course-description">
+          <label for="requirements">What are the requirements or prerequisites for taking your course?</label>
+          <textarea id="requirements" placeholder="Example: No programming experience needed. You will learn everything you need to know."></textarea>
+          <div class="char-count">160</div>
+        </div>
 
-                <div class="action-btns">
-                    <button class="previous-btn" onclick="previousStep(3)">Previous</button>
-                    <button class="next-btn" onclick="nextStep(5)">Next</button>
-                </div>
-            </section>
+        <div class="course-description">
+          <label for="who-is-this-for">Who is this course for?</label>
+          <textarea id="who-is-this-for" placeholder="Example: Beginner Python developers curious about data science."></textarea>
+          <div class="char-count">160</div>
+        </div>
 
-            <!-- Step 5: Time Commitment -->
-            <section class="step-content step-5">
-                <h1>How much time can you spend creating your course per week?</h1>
-                <p>There's no wrong answer. We can help you achieve your goals even if you don't have much time.</p>
-                <div class="time-options">
-                    <label><input type="radio" name="time" value="0-2"> I’m very busy right now (0-2 hours)</label>
-                    <label><input type="radio" name="time" value="2-4"> I’ll work on this on the side (2-4 hours)</label>
-                    <label><input type="radio" name="time" value="5+"> I have lots of flexibility (5+ hours)</label>
-                    <label><input type="radio" name="time" value="haven't_decided"> I haven’t yet decided if I have time</label>
-                </div>
+        <div class="action-btns">
+          <button class="previous-btn" onclick="previousStep(3)">Previous</button>
+          <button class="next-btn" onclick="nextStep(5)">Next</button>
+        </div>
+      </section>
 
-                <div class="action-btns">
-                    <button class="previous-btn" onclick="previousStep(4)">Previous</button>
-                    <a href="CreateCourse.html">
-                        <button class="finish-btn">Create Course</button>
-                      </a>
-                </div>
-            </section>
-        </main>
-    </div>
+      <!-- Step 5: Time Commitment -->
+      <section class="step-content step-5">
+        <h1>How much time can you spend creating your course per week?</h1>
+        <p>There's no wrong answer. We can help you achieve your goals even if you don't have much time.</p>
+        <div class="time-options">
+          <label><input type="radio" name="time" value="0-2" /> I’m very busy right now (0-2 hours)</label>
+          <label><input type="radio" name="time" value="2-4" /> I’ll work on this on the side (2-4 hours)</label>
+          <label><input type="radio" name="time" value="5+" /> I have lots of flexibility (5+ hours)</label>
+          <label><input type="radio" name="time" value="haven't_decided" /> I haven’t yet decided if I have time</label>
+        </div>
 
-    <script>
-        let courseType = '';
-        let category = '';
-        let title = '';
+        <!-- Step 5 Action Buttons -->
+        <div class="action-btns">
+            <button class="previous-btn" onclick="previousStep(4)">Previous</button>
+            <button class="finish-btn" onclick="submitCourseData()">Create Course</button>
+        </div>
+      </section>
+    </main>
+  </div>
 
-        function nextStep(step) {
-            document.querySelector('.step-' + (step - 1)).classList.remove('active');
-            document.querySelector('.step-' + step).classList.add('active');
-            updateProgress(step);
+  <!-- JavaScript -->
+<script>
+  let selectedCourseType = "Course"; // Hardcoded courseType
+
+  function updateCharCount() {
+    const input = document.getElementById("course-title");
+    document.querySelector(".step-2 .char-count").textContent = 60 - input.value.length;
+  }
+
+  function previewImage() {
+    const url = document.getElementById("title-card-img").value;
+    const img = document.getElementById("preview-img");
+    if (url) {
+      img.src = url;
+      img.style.display = "block";
+    } else {
+      img.style.display = "none";
+    }
+  }
+
+  function updateCategorySelection() {
+    const selected = document.getElementById("category-dropdown").value;
+    courseData.category = selected;
+  }
+
+  function nextStep(stepNumber) {
+    document.querySelectorAll('.step-content').forEach(section => section.classList.remove('active'));
+    document.querySelector(`.step-${stepNumber}`).classList.add('active');
+
+    const stepText = document.querySelector('.step-indicator .step');
+    const progress = document.querySelector('.progress');
+    stepText.textContent = `Step ${stepNumber} of 5`;
+    progress.style.width = `${(stepNumber - 1) * 25}%`;
+  }
+
+  function previousStep(stepNumber) {
+    document.querySelectorAll('.step-content').forEach(section => section.classList.remove('active'));
+    document.querySelector(`.step-${stepNumber}`).classList.add('active');
+
+    const stepText = document.querySelector('.step-indicator .step');
+    const progress = document.querySelector('.progress');
+    stepText.textContent = `Step ${stepNumber} of 5`;
+    progress.style.width = `${(stepNumber - 1) * 25}%`;
+  }
+
+  document.querySelectorAll('input[name="time"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      courseData.timeCommitment = radio.value;
+    });
+  });
+
+  function submitCourseData() {
+    const courseData = {
+      courseType: selectedCourseType,
+      title: document.getElementById('course-title').value.trim(),
+      imageUrl: document.getElementById('title-card-img').value.trim(),
+      category: document.getElementById('category-dropdown').value,
+      learnObjectives: document.getElementById('learn-objectives').value.trim(),
+      requirements: document.getElementById('requirements').value.trim(),
+      whoIsThisFor: document.getElementById('who-is-this-for').value.trim(),
+      timeCommitment: document.querySelector('input[name="time"]:checked')?.value || "",
+      userId: 1 // or replace dynamically
+    };
+
+    if (!courseData.title || !courseData.category || !courseData.timeCommitment) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
+    fetch('/create-course', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(courseData)
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+            alert("✅ Course created successfully!");
+            window.location.href = `/create-course-content/${data.userId}/${data.courseId}`;
+        } else {
+            alert("❌ Error: " + (data.message || "Something went wrong"));
         }
+        })
+      .catch(err => {
+        console.error("Error:", err);
+        alert("❌ Failed to create course.");
+      });
+  }
 
-        function previousStep(step) {
-            document.querySelector('.step-' + (step + 1)).classList.remove('active');
-            document.querySelector('.step-' + step).classList.add('active');
-            updateProgress(step);
-        }
-
-        function updateProgress(step) {
-            const progress = (step - 1) * 25;
-            document.querySelector('.progress').style.width = progress + '%';
-            document.querySelector('.step').textContent = 'Step ' + step + ' of 5';
-        }
-
-        function updateCharCount() {
-            const charCountElement = document.querySelector('.char-count');
-            const titleInput = document.getElementById('course-title');
-            const remainingChars = 60 - titleInput.value.length;
-            charCountElement.textContent = remainingChars;
-        }
-
-        function updateCategorySelection() {
-            category = document.getElementById('category-dropdown').value;
-        }
-
-        function selectCourseType(type) {
-            courseType = type;
-        }
-
-        function finishCourse() {
-            alert('Course created successfully!');
-        }
-
-        function exitCourseCreation() {
-            if (confirm('Are you sure you want to exit? Your progress may not be saved.')) {
-                window.location.reload(); // Reloads the page if user confirms exit
-            }
-        }
-    </script>
+  function exitCourseCreation() {
+    if (confirm("Are you sure you want to exit? All progress will be lost.")) {
+      window.location.href = '/';
+    }
+  }
+</script>
 </body>
-
 </html>
