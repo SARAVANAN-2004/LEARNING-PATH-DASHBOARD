@@ -94,7 +94,10 @@ h2 {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     justify-content: center;
+    max-width: 1200px; /* 👈 limits container width */
+    margin: 0 auto;     /* 👈 centers the container */
 }
+
 
 /* Course Cards */
 .course-card {
