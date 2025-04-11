@@ -145,6 +145,58 @@ router.get('/course-creation', (req, res) => {
 });
 
 
+router.get('/AddCourseContent/CourseDashboard', async (req, res) => {
+  console.log("Navigated to AddCourseContent Dashboard");
+
+  try {
+    const userId = req.session?.user?.id;
+    if (!userId) return res.redirect('/login');
+
+    const coursesResult = await db.query(
+      'SELECT * FROM courses WHERE user_id = $1',
+      [userId]
+    );
+    const courses = coursesResult.rows;
+
+    const enrollStatsResult = await db.query(
+      `SELECT 
+         c.id, c.title, c.category, c.price, c.rating,
+         COUNT(uc.id) AS enrollment_count
+       FROM courses c
+       LEFT JOIN user_courses uc ON c.id = uc.course_id
+       WHERE c.user_id = $1
+       GROUP BY c.id
+       ORDER BY enrollment_count DESC`,
+      [userId]
+    );
+    const enrollStats = enrollStatsResult.rows;
+
+    let topCourse = null;
+    if (enrollStats.length > 0) {
+      const topCourseId = enrollStats
+        .map(c => ({ id: c.id, score: c.enrollment_count * parseFloat(c.rating || 0) }))
+        .sort((a, b) => b.score - a.score)[0].id;
+
+      const topCourseResult = await db.query(
+        'SELECT * FROM courses WHERE id = $1',
+        [topCourseId]
+      );
+      topCourse = topCourseResult.rows[0];
+    }
+
+    res.render('CourseDashboard', {
+      enrollStats,
+      topCourse
+    });
+
+  } catch (err) {
+    console.error("Error in /AddCourseContent/CourseDashboard:", err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+
+
 router.post('/create-course', async (req, res) => {
   try {
     const {
