@@ -71,48 +71,52 @@
     }
 
     function submitCourse() {
-      
-      const sections = document.querySelectorAll(".section");
-      const courseData = [];
+  const sections = document.querySelectorAll(".section");
+  const courseData = [];
 
-      sections.forEach(section => {
-        const sectionTitle = section.querySelector(".section-title").value;
-        const lessons = section.querySelectorAll(".lesson");
-        const lessonData = [];
+  sections.forEach(section => {
+    const sectionTitle = section.querySelector(".section-title").value;
+    const lessons = section.querySelectorAll(".lesson");
+    const lessonData = [];
 
-        lessons.forEach(lesson => {
-          const title = lesson.querySelector(".lesson-title").value;
-          const video = lesson.querySelector(".lesson-video").value;
-          const resources = lesson.querySelector(".lesson-resources").value;
-          lessonData.push({ title, video, resources });
-        });
+    lessons.forEach(lesson => {
+      const title = lesson.querySelector(".lesson-title").value;
+      const video = lesson.querySelector(".lesson-video").value;
+      const resources = lesson.querySelector(".lesson-resources").value;
+      lessonData.push({ title, video, resources });
+    });
 
-        courseData.push({ sectionTitle, lessons: lessonData });
-      });
+    courseData.push({ sectionTitle, lessons: lessonData });
+  });
 
-      const summary = document.getElementById("courseSummary").value;
-      const pathParts = window.location.pathname.split('/');
-      const userId = pathParts[pathParts.length - 2];
-      const courseId = pathParts[pathParts.length - 1];
+  const summary = document.getElementById("courseSummary").value;
+  const pathParts = window.location.pathname.split('/');
+  const userId = pathParts[pathParts.length - 2];
+  const courseId = pathParts[pathParts.length - 1];
 
-
-      fetch("/create-course-content", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ courseId, userId, summary, sections: courseData })
-      })
-      .then(res => res.json())
-      .then(data => {
-        alert("✅ Course content uploaded!");
-        console.log(data);
-      })
-      .catch(err => {
-        alert("❌ Error uploading course content.");
-        console.error(err);
-      });
+  
+  fetch("/create-course-content", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ courseId, userId, summary, sections: courseData })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert("✅ Course content uploaded!");
+      window.location.href = "/dashboard"; // 🚀 Redirect to dashboard
+    } else {
+      alert("❌ Failed to upload content.");
     }
+  })
+  .catch(err => {
+    alert("❌ Error uploading course content.");
+    console.error(err);
+  });
+}
+
   </script>
 </body>
 </html>
